@@ -9,7 +9,7 @@ Run these from the `glowmax/` folder.
 ## 1. Log in to Expo (EAS)
 
 ```bash
-npx eas login
+npx eas-cli@latest login
 ```
 
 Creates a free Expo account / logs into an existing one (opens a browser or prompts for
@@ -18,7 +18,7 @@ username+password in the terminal — this is Expo's own account, separate from 
 ## 2. Link this project to EAS
 
 ```bash
-npx eas init
+npx eas-cli@latest init
 ```
 
 This writes a `projectId` into `app.config.js` automatically (via `extra.eas.projectId`) — commit
@@ -27,7 +27,7 @@ that change afterward.
 ## 3. Build the iOS app in the cloud
 
 ```bash
-npx eas build --platform ios --profile production
+npx eas-cli@latest build --platform ios --profile production
 ```
 
 - First run will ask to log in to your **Apple Developer account** and will offer to
@@ -67,7 +67,7 @@ the app and capture the exact sizes Apple requires.
 Either:
 
 ```bash
-npx eas submit --platform ios --profile production
+npx eas-cli@latest submit --platform ios --profile production
 ```
 
 (fill your Apple ID, App Store Connect app ID, and Team ID into `eas.json`'s `submit.production.ios`
