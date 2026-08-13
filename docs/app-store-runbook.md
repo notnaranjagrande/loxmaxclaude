@@ -31,7 +31,7 @@ npx eas build --platform ios --profile production
 ```
 
 - First run will ask to log in to your **Apple Developer account** and will offer to
-  auto-generate signing certificates & provisioning profiles for `com.glowmax.app` — let it
+  auto-generate signing certificates & provisioning profiles for `com.petersdev.loxmax.pro` — let it
   manage credentials unless you already have your own.
 - Takes ~15-20 minutes. You'll get a link to download the `.ipa` when done.
 
@@ -42,7 +42,7 @@ Go to [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **My Ap
 - Platform: iOS
 - Name: `GlowMax` (or add a suffix if taken, e.g. `GlowMax: Face Scan`)
 - Primary language: English (U.S.)
-- Bundle ID: select `com.glowmax.app` (must already exist under your account — EAS creates it
+- Bundle ID: select `com.petersdev.loxmax.pro` (must already exist under your account — EAS creates it
   during step 3, or create it manually at developer.apple.com → Identifiers first)
 - SKU: `glowmax-ios` (anything unique, not shown to users)
 

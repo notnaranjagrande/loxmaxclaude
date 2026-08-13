@@ -11,7 +11,7 @@ module.exports = {
     scheme: "glowmax",
     ios: {
       supportsTablet: true,
-      bundleIdentifier: "com.glowmax.app",
+      bundleIdentifier: "com.petersdev.loxmax.pro",
       buildNumber: "1",
       infoPlist: {
         NSCameraUsageDescription:
@@ -20,7 +20,7 @@ module.exports = {
       },
     },
     android: {
-      package: "com.glowmax.app",
+      package: "com.petersdev.loxmax.pro",
       versionCode: 1,
       adaptiveIcon: {
         backgroundColor: "#7C5CFF",

@@ -4,7 +4,7 @@
 
 - **Name** (30 char max): `GlowMax`
 - **Subtitle** (30 char max): `Face Scan & Glow Score`
-- **Bundle ID**: `com.glowmax.app`
+- **Bundle ID**: `com.petersdev.loxmax.pro`
 - **Primary category**: Lifestyle
 - **Secondary category** (optional): Photo & Video
 - **Content rights**: You own/have rights to all content (no third-party copyrighted content).
