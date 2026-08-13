@@ -16,11 +16,13 @@ import type { ScanResult } from "../types/scan";
 import { fetchScans, deleteScan } from "../lib/scans";
 import { useAuth } from "../lib/AuthContext";
 import { colors, radii } from "../lib/theme";
+import { useTranslation } from "../lib/i18n";
 
 type Props = NativeStackScreenProps<RootStackParamList, "History">;
 
 export function HistoryScreen({ navigation }: Props) {
   const { session } = useAuth();
+  const { t, localeTag } = useTranslation();
   const [scans, setScans] = useState<ScanResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -36,7 +38,7 @@ export function HistoryScreen({ navigation }: Props) {
       setScans(data);
       setError(null);
     } catch (err: any) {
-      setError(err?.message ?? "Kunde inte hämta historik.");
+      setError(err?.message ?? t("history.loadError"));
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -64,7 +66,7 @@ export function HistoryScreen({ navigation }: Props) {
         <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>✕</Text>
         </Pressable>
-        <Text style={styles.headerTitle}>Historik</Text>
+        <Text style={styles.headerTitle}>{t("history.title")}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -79,9 +81,9 @@ export function HistoryScreen({ navigation }: Props) {
       ) : scans.length === 0 ? (
         <View style={styles.centerContent}>
           <Text style={styles.emptyEmoji}>📭</Text>
-          <Text style={styles.emptyText}>Inga scans än. Gör din första scan!</Text>
+          <Text style={styles.emptyText}>{t("history.empty")}</Text>
           <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("Scan")}>
-            <Text style={styles.primaryButtonText}>Starta scan</Text>
+            <Text style={styles.primaryButtonText}>{t("history.startScan")}</Text>
           </Pressable>
         </View>
       ) : (
@@ -108,13 +110,13 @@ export function HistoryScreen({ navigation }: Props) {
               <Image source={{ uri: item.photoUri }} style={styles.thumb} />
               <View style={styles.rowInfo}>
                 <Text style={styles.rowDate}>
-                  {new Date(item.createdAt).toLocaleDateString("sv-SE", {
+                  {new Date(item.createdAt).toLocaleDateString(localeTag, {
                     day: "numeric",
                     month: "short",
                     year: "numeric",
                   })}
                 </Text>
-                <Text style={styles.rowSub}>Tryck och håll för att ta bort</Text>
+                <Text style={styles.rowSub}>{t("history.deleteHint")}</Text>
               </View>
               <View style={styles.rowScore}>
                 <Text style={styles.rowScoreText}>{item.overallScore}</Text>

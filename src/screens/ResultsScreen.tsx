@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../navigation/RootNavigator";
 import { colors, radii } from "../lib/theme";
+import { useTranslation } from "../lib/i18n";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Results">;
 
@@ -15,6 +16,7 @@ function scoreColor(score: number) {
 
 export function ResultsScreen({ route, navigation }: Props) {
   const { scan } = route.params;
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
@@ -23,7 +25,7 @@ export function ResultsScreen({ route, navigation }: Props) {
           <Pressable onPress={() => navigation.navigate("Welcome")} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>✕</Text>
           </Pressable>
-          <Text style={styles.headerTitle}>Din Glow Score</Text>
+          <Text style={styles.headerTitle}>{t("results.title")}</Text>
           <View style={{ width: 40 }} />
         </View>
 
@@ -39,7 +41,7 @@ export function ResultsScreen({ route, navigation }: Props) {
         <View style={styles.categories}>
           {scan.categories.map((c) => (
             <View key={c.category} style={styles.categoryRow}>
-              <Text style={styles.categoryLabel}>{c.label}</Text>
+              <Text style={styles.categoryLabel}>{t(`categories.${c.category}`)}</Text>
               <View style={styles.barTrack}>
                 <View
                   style={[
@@ -54,20 +56,20 @@ export function ResultsScreen({ route, navigation }: Props) {
         </View>
 
         <View style={styles.tipsSection}>
-          <Text style={styles.tipsTitle}>Dina tips ✨</Text>
+          <Text style={styles.tipsTitle}>{t("results.tipsTitle")}</Text>
           {scan.tips.map((tip, i) => (
             <View key={i} style={styles.tipCard}>
-              <Text style={styles.tipText}>{tip}</Text>
+              <Text style={styles.tipText}>{t(`tips.${tip}`)}</Text>
             </View>
           ))}
         </View>
 
         <View style={styles.actions}>
           <Pressable style={styles.primaryButton} onPress={() => navigation.replace("Scan")}>
-            <Text style={styles.primaryButtonText}>Scanna igen</Text>
+            <Text style={styles.primaryButtonText}>{t("results.scanAgain")}</Text>
           </Pressable>
           <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate("History")}>
-            <Text style={styles.secondaryButtonText}>Se historik</Text>
+            <Text style={styles.secondaryButtonText}>{t("results.viewHistory")}</Text>
           </Pressable>
         </View>
       </ScrollView>

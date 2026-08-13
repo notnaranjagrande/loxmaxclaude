@@ -7,7 +7,7 @@ const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn(
-    "Supabase env vars saknas. Kopiera .env.example till .env och fyll i dina nycklar."
+    "Supabase env vars missing. Copy .env.example to .env and fill in your keys."
   );
 }
 

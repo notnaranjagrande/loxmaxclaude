@@ -9,21 +9,16 @@ import { computeScan } from "../lib/scoring";
 import { uploadScan } from "../lib/scans";
 import { useAuth } from "../lib/AuthContext";
 import { colors, radii } from "../lib/theme";
+import { useTranslation, tAnalyzingSteps } from "../lib/i18n";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Analyzing">;
-
-const STEPS = [
-  "Läser av ansiktspunkter…",
-  "Beräknar symmetri…",
-  "Analyserar proportioner…",
-  "Utvärderar hudton…",
-  "Skapar dina tips…",
-];
 
 export function AnalyzingScreen({ route, navigation }: Props) {
   const { photoUri } = route.params;
   const engineRef = useFaceMesh();
   const { session } = useAuth();
+  const { t, locale } = useTranslation();
+  const STEPS = tAnalyzingSteps(locale);
   const [stepIndex, setStepIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const ranRef = useRef(false);
@@ -44,7 +39,7 @@ export function AnalyzingScreen({ route, navigation }: Props) {
   async function waitForEngine(timeoutMs = 20000) {
     const start = Date.now();
     while (!engineRef.current?.isReady()) {
-      if (Date.now() - start > timeoutMs) throw new Error("Ansiktsmotorn kunde inte starta. Kolla din internetanslutning.");
+      if (Date.now() - start > timeoutMs) throw new Error(t("analyzing.errors.engineStartFailed"));
       await new Promise((r) => setTimeout(r, 250));
     }
   }
@@ -70,7 +65,7 @@ export function AnalyzingScreen({ route, navigation }: Props) {
           navigation.replace("Results", { scan: saved, isNew: true });
           return;
         } catch (uploadErr) {
-          console.warn("Kunde inte spara scan i Supabase:", uploadErr);
+          console.warn("Could not save scan to Supabase:", uploadErr);
         }
       }
 
@@ -86,17 +81,17 @@ export function AnalyzingScreen({ route, navigation }: Props) {
         isNew: true,
       });
     } catch (err: any) {
-      setError(err?.message ?? "Något gick fel under analysen.");
+      setError(err?.message ?? t("analyzing.errors.unknown"));
     }
   }
 
   if (error) {
     return (
       <SafeAreaView style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorTitle}>Hoppsan 😕</Text>
+        <Text style={styles.errorTitle}>{t("analyzing.errorTitle")}</Text>
         <Text style={styles.errorText}>{error}</Text>
         <Pressable style={styles.retryButton} onPress={() => navigation.replace("Scan")}>
-          <Text style={styles.retryButtonText}>Försök igen</Text>
+          <Text style={styles.retryButtonText}>{t("common.tryAgain")}</Text>
         </Pressable>
       </SafeAreaView>
     );

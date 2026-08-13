@@ -6,10 +6,12 @@ import * as ImageManipulator from "expo-image-manipulator";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../navigation/RootNavigator";
 import { colors, radii } from "../lib/theme";
+import { useTranslation } from "../lib/i18n";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Scan">;
 
 export function ScanScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
   const [capturing, setCapturing] = useState(false);
@@ -21,13 +23,10 @@ export function ScanScreen({ navigation }: Props) {
   if (!permission.granted) {
     return (
       <SafeAreaView style={[styles.container, styles.centerContent]}>
-        <Text style={styles.permissionTitle}>Kameraåtkomst behövs</Text>
-        <Text style={styles.permissionText}>
-          GlowMax behöver kameran för att scanna ditt ansikte. Bilden analyseras direkt på din
-          telefon och laddas bara upp om du väljer att spara resultatet.
-        </Text>
+        <Text style={styles.permissionTitle}>{t("scan.permissionTitle")}</Text>
+        <Text style={styles.permissionText}>{t("scan.permissionText")}</Text>
         <Pressable style={styles.primaryButton} onPress={requestPermission}>
-          <Text style={styles.primaryButtonText}>Ge kameraåtkomst</Text>
+          <Text style={styles.primaryButtonText}>{t("scan.grantAccess")}</Text>
         </Pressable>
       </SafeAreaView>
     );
@@ -38,7 +37,7 @@ export function ScanScreen({ navigation }: Props) {
     setCapturing(true);
     try {
       const photo = await cameraRef.current.takePictureAsync({ quality: 0.9 });
-      if (!photo?.uri) throw new Error("Kunde inte ta bilden.");
+      if (!photo?.uri) throw new Error(t("analyzing.errors.captureFailed"));
 
       const manipulated = await ImageManipulator.manipulateAsync(
         photo.uri,
@@ -63,13 +62,13 @@ export function ScanScreen({ navigation }: Props) {
           <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
             <Text style={styles.backButtonText}>✕</Text>
           </Pressable>
-          <Text style={styles.headerTitle}>Positionera ditt ansikte</Text>
+          <Text style={styles.headerTitle}>{t("scan.positionFace")}</Text>
           <View style={{ width: 40 }} />
         </View>
 
         <View style={styles.guideWrap}>
           <View style={styles.faceGuide} />
-          <Text style={styles.guideHint}>Titta rakt fram i jämnt ljus, utan glasögon</Text>
+          <Text style={styles.guideHint}>{t("scan.guideHint")}</Text>
         </View>
 
         <View style={styles.footer}>

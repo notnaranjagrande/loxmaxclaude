@@ -4,9 +4,17 @@ export type ScoreCategory = "symmetry" | "proportions" | "skin" | "jawline";
 
 export type CategoryScore = {
   category: ScoreCategory;
-  label: string;
   score: number; // 0-100
 };
+
+export type TipKey =
+  | "symmetryHairstyle"
+  | "jawlineGrooming"
+  | "skincareRoutine"
+  | "eyebrowsBalance"
+  | "thirdsProportions"
+  | "lightingTip"
+  | "sleepWaterTip";
 
 export type ScanResult = {
   id: string;
@@ -15,7 +23,7 @@ export type ScanResult = {
   photoPath?: string;
   overallScore: number;
   categories: CategoryScore[];
-  tips: string[];
+  tips: TipKey[];
 };
 
 export type ScanRow = {
@@ -24,6 +32,6 @@ export type ScanRow = {
   photo_path: string;
   overall_score: number;
   categories: CategoryScore[];
-  tips: string[];
+  tips: TipKey[];
   created_at: string;
 };

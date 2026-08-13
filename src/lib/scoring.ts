@@ -1,4 +1,4 @@
-import type { CategoryScore, Landmark, ScoreCategory } from "../types/scan";
+import type { CategoryScore, Landmark, TipKey } from "../types/scan";
 
 // MediaPipe FaceMesh (478 pt) landmark indices used for measurements.
 const IDX = {
@@ -45,7 +45,7 @@ export type SkinMetrics = {
 export function computeScan(
   landmarks: Landmark[],
   skin?: SkinMetrics
-): { overallScore: number; categories: CategoryScore[]; tips: string[] } {
+): { overallScore: number; categories: CategoryScore[]; tips: TipKey[] } {
   const p = (i: number) => landmarks[i];
 
   const faceWidth = dist(p(IDX.cheekLeft), p(IDX.cheekRight));
@@ -106,10 +106,10 @@ export function computeScan(
   const skinScore = skin ? clamp((skin.evenness + skin.brightness) / 2) : 68;
 
   const categories: CategoryScore[] = [
-    { category: "symmetry", label: "Symmetri", score: Math.round(symmetryScore) },
-    { category: "proportions", label: "Proportioner", score: Math.round(proportionsScore) },
-    { category: "jawline", label: "Käklinje", score: Math.round(jawlineScore) },
-    { category: "skin", label: "Hudton", score: Math.round(skinScore) },
+    { category: "symmetry", score: Math.round(symmetryScore) },
+    { category: "proportions", score: Math.round(proportionsScore) },
+    { category: "jawline", score: Math.round(jawlineScore) },
+    { category: "skin", score: Math.round(skinScore) },
   ];
 
   const overallScore = Math.round(
@@ -137,36 +137,16 @@ function buildTips(m: {
   eyeSpacingRatio: number;
   noseMouthRatio: number;
   thirdsVariance: number;
-}): string[] {
-  const tips: string[] = [];
+}): TipKey[] {
+  const tips: TipKey[] = [];
 
-  if (m.symmetryScore < 75) {
-    tips.push(
-      "Din symmetri kan lyftas visuellt med en frisyr som balanserar ansiktets sidor, och genom att träna på att le/posera rakt mot kameran."
-    );
-  }
-  if (m.jawlineScore < 70) {
-    tips.push(
-      "Käklinjen kan framhävas med skäggstyling eller mewing-övningar, samt en frisyr med volym vid tinningarna."
-    );
-  }
-  if (m.skinScore < 70) {
-    tips.push(
-      "En enkel hudvårdsrutin (rengöring, fuktkräm, SPF dagligen) gör stor skillnad för hudens jämnhet och lyster inom några veckor."
-    );
-  }
-  if (m.eyeSpacingRatio < 0.85 || m.eyeSpacingRatio > 1.15) {
-    tips.push(
-      "Ögonbrynens form kan justeras (trimning/tejp) för att skapa mer visuell balans mellan ögonen."
-    );
-  }
-  if (m.thirdsVariance > 0.15) {
-    tips.push(
-      "Frisyr och skägg kan användas för att visuellt jämna ut proportionerna mellan panna, näsa och haka."
-    );
-  }
-  tips.push("Bra belysning framifrån och en avslappnad hållning gör mest skillnad på foton.");
-  tips.push("Sömn, vatten och regelbunden träning märks snabbt i hudton och ansiktskontur.");
+  if (m.symmetryScore < 75) tips.push("symmetryHairstyle");
+  if (m.jawlineScore < 70) tips.push("jawlineGrooming");
+  if (m.skinScore < 70) tips.push("skincareRoutine");
+  if (m.eyeSpacingRatio < 0.85 || m.eyeSpacingRatio > 1.15) tips.push("eyebrowsBalance");
+  if (m.thirdsVariance > 0.15) tips.push("thirdsProportions");
+  tips.push("lightingTip");
+  tips.push("sleepWaterTip");
 
   return tips.slice(0, 5);
 }

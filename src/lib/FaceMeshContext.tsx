@@ -15,6 +15,6 @@ export function FaceMeshProvider({ children }: { children: React.ReactNode }) {
 
 export function useFaceMesh() {
   const ctx = useContext(FaceMeshContext);
-  if (!ctx) throw new Error("useFaceMesh måste användas inom FaceMeshProvider");
+  if (!ctx) throw new Error("useFaceMesh must be used within FaceMeshProvider");
   return ctx;
 }

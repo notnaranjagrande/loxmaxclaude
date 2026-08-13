@@ -4,6 +4,7 @@ import WebView from "react-native-webview";
 import { FACE_MESH_HTML } from "../lib/faceMeshHtml";
 import type { Landmark } from "../types/scan";
 import type { SkinMetrics } from "../lib/scoring";
+import { useTranslation } from "../lib/i18n";
 
 export type FaceMeshResult = { landmarks: Landmark[]; skin: SkinMetrics };
 
@@ -18,6 +19,7 @@ type PendingResolver = {
 };
 
 export const FaceMeshEngine = forwardRef<FaceMeshEngineHandle>((_props, ref) => {
+  const { t } = useTranslation();
   const webviewRef = useRef<WebView>(null);
   const readyRef = useRef(false);
   const pendingRef = useRef<PendingResolver | null>(null);
@@ -28,7 +30,7 @@ export const FaceMeshEngine = forwardRef<FaceMeshEngineHandle>((_props, ref) => 
     analyze: (base64JpegDataUri: string) =>
       new Promise<FaceMeshResult>((resolve, reject) => {
         if (!readyRef.current) {
-          reject(new Error("Ansiktsmotorn är inte redo än, försök igen om en stund."));
+          reject(new Error(t("analyzing.errors.engineNotReady")));
           return;
         }
         pendingRef.current = { resolve, reject };
@@ -37,7 +39,7 @@ export const FaceMeshEngine = forwardRef<FaceMeshEngineHandle>((_props, ref) => 
         );
         setTimeout(() => {
           if (pendingRef.current) {
-            pendingRef.current.reject(new Error("Analysen tog för lång tid."));
+            pendingRef.current.reject(new Error(t("analyzing.errors.analysisTimeout")));
             pendingRef.current = null;
           }
         }, 15000);
@@ -65,10 +67,11 @@ export const FaceMeshEngine = forwardRef<FaceMeshEngineHandle>((_props, ref) => 
       pending.resolve({ landmarks: data.landmarks, skin: data.skin });
       pendingRef.current = null;
     } else if (data.type === "no_face") {
-      pending.reject(new Error("Kunde inte hitta något ansikte i bilden. Försök igen med bättre belysning."));
+      pending.reject(new Error(t("analyzing.errors.noFace")));
       pendingRef.current = null;
     } else if (data.type === "error") {
-      pending.reject(new Error(data.message || "Okänt fel i ansiktsanalysen."));
+      if (data.message) console.warn("FaceMeshEngine error:", data.message);
+      pending.reject(new Error(t("analyzing.errors.unknown")));
       pendingRef.current = null;
     }
   };

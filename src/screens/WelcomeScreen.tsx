@@ -1,14 +1,17 @@
 import React from "react";
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../navigation/RootNavigator";
 import { colors, radii } from "../lib/theme";
+import { useTranslation } from "../lib/i18n";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen({ navigation }: Props) {
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient colors={[colors.bg, colors.bgAlt]} style={StyleSheet.absoluteFill} />
@@ -22,28 +25,24 @@ export function WelcomeScreen({ navigation }: Props) {
         >
           <Text style={styles.badgeEmoji}>✨</Text>
         </LinearGradient>
-        <Text style={styles.title}>GlowMax</Text>
-        <Text style={styles.subtitle}>
-          Scanna ditt ansikte, få din Glow Score och personliga tips för att lyfta din look.
-        </Text>
+        <Text style={styles.title}>{t("welcome.title")}</Text>
+        <Text style={styles.subtitle}>{t("welcome.subtitle")}</Text>
       </View>
 
       <View style={styles.features}>
-        <Feature emoji="📐" text="Symmetri & proportioner analyserat on-device" />
-        <Feature emoji="🧴" text="Hudton-feedback och skötseltips" />
-        <Feature emoji="📈" text="Följ din utveckling över tid" />
+        <Feature emoji="📐" text={t("welcome.feature1")} />
+        <Feature emoji="🧴" text={t("welcome.feature2")} />
+        <Feature emoji="📈" text={t("welcome.feature3")} />
       </View>
 
       <View style={styles.actions}>
         <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("Scan")}>
-          <Text style={styles.primaryButtonText}>Starta scan</Text>
+          <Text style={styles.primaryButtonText}>{t("welcome.startScan")}</Text>
         </Pressable>
         <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate("History")}>
-          <Text style={styles.secondaryButtonText}>Se historik</Text>
+          <Text style={styles.secondaryButtonText}>{t("welcome.viewHistory")}</Text>
         </Pressable>
-        <Text style={styles.disclaimer}>
-          Bara för skoj skull & självförbättringstips — inte ett vetenskapligt mått på ditt värde. 💜
-        </Text>
+        <Text style={styles.disclaimer}>{t("welcome.disclaimer")}</Text>
       </View>
     </SafeAreaView>
   );
