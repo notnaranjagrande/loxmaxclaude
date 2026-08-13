@@ -88,10 +88,19 @@ Confirm "Data Not Linked to You" is **unchecked** where applicable (your data IS
 
 ## Screenshots
 
-App Store requires screenshots for at least one 6.7" (or 6.9") iPhone size. Capture these from the simulator once a build is installed:
-1. Welcome screen
-2. Scan / camera guide screen
-3. Results screen with score + tips
-4. History screen
+Captured in `docs/screenshots/` (1206×2622, from the iPhone 17 simulator):
+1. `01-welcome.png`
+2. `02-scan.png`
+3. `03-results.png`
+4. `04-history.png`
 
-(Ask me to generate these once you have a build running in the simulator — I can drive it and capture the exact PNGs Apple wants.)
+**Two caveats:**
+- The Results/History screenshots use a stylized gradient-avatar placeholder instead of a real
+  face photo — deliberately, since generating a fake "realistic person" for marketing would be
+  misleading. Swap in real (consenting) selfies before final submission if you want the most
+  compelling screenshots, or keep the placeholder — it still honestly shows the UI and score
+  breakdown.
+- 1206×2622 is the simulator's native size (~6.3"). If App Store Connect asks specifically for
+  6.9"/6.7" dimensions when you upload, re-run this capture on an iPhone 17 Pro Max /
+  16 Pro Max simulator, or let Xcode/App Store Connect upscale — ask me to redo it and I'll
+  retry that device.
