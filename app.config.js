@@ -12,15 +12,18 @@ module.exports = {
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.glowmax.app",
+      buildNumber: "1",
       infoPlist: {
         NSCameraUsageDescription:
-          "GlowMax behöver kameran för att scanna ditt ansikte och ge dig personliga tips.",
+          "GlowMax uses your camera to scan your face and give you personalized tips. Photos are analyzed on your device.",
+        ITSAppUsesNonExemptEncryption: false,
       },
     },
     android: {
       package: "com.glowmax.app",
+      versionCode: 1,
       adaptiveIcon: {
-        backgroundColor: "#E6F4FE",
+        backgroundColor: "#7C5CFF",
         foregroundImage: "./assets/android-icon-foreground.png",
         backgroundImage: "./assets/android-icon-background.png",
         monochromeImage: "./assets/android-icon-monochrome.png",
@@ -36,7 +39,16 @@ module.exports = {
         "expo-camera",
         {
           cameraPermission:
-            "GlowMax behöver kameran för att scanna ditt ansikte och ge dig personliga tips.",
+            "GlowMax uses your camera to scan your face and give you personalized tips. Photos are analyzed on your device.",
+        },
+      ],
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/splash-icon.png",
+          imageWidth: 180,
+          resizeMode: "contain",
+          backgroundColor: "#0F0B1A",
         },
       ],
     ],

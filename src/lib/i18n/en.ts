@@ -13,6 +13,7 @@ export interface TranslationShape {
     startScan: string;
     viewHistory: string;
     disclaimer: string;
+    privacyLink: string;
   };
   scan: {
     permissionTitle: string;
@@ -78,6 +79,7 @@ export const en: TranslationShape = {
     startScan: "Start scan",
     viewHistory: "View history",
     disclaimer: "Just for fun & self-improvement tips — not a scientific measure of your worth. 💜",
+    privacyLink: "Privacy Policy",
   },
   scan: {
     permissionTitle: "Camera access needed",

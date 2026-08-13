@@ -1,11 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../navigation/RootNavigator";
 import { colors, radii } from "../lib/theme";
 import { useTranslation } from "../lib/i18n";
+import { PRIVACY_POLICY_URL } from "../lib/constants";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
@@ -43,6 +44,9 @@ export function WelcomeScreen({ navigation }: Props) {
           <Text style={styles.secondaryButtonText}>{t("welcome.viewHistory")}</Text>
         </Pressable>
         <Text style={styles.disclaimer}>{t("welcome.disclaimer")}</Text>
+        <Pressable onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}>
+          <Text style={styles.privacyLink}>{t("welcome.privacyLink")}</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -117,5 +121,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 4,
     paddingHorizontal: 12,
+  },
+  privacyLink: {
+    color: colors.primary,
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 10,
+    textDecorationLine: "underline",
   },
 });

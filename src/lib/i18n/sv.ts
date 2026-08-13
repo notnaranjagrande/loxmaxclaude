@@ -15,6 +15,7 @@ export const sv: TranslationShape = {
     startScan: "Starta scan",
     viewHistory: "Se historik",
     disclaimer: "Bara för skoj skull & självförbättringstips — inte ett vetenskapligt mått på ditt värde. 💜",
+    privacyLink: "Integritetspolicy",
   },
   scan: {
     permissionTitle: "Kameraåtkomst behövs",
