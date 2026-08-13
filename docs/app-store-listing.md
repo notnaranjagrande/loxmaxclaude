@@ -2,7 +2,7 @@
 
 ## App Information
 
-- **Name** (30 char max): `GlowMax`
+- **Name** (30 char max): `GlowMax AI Looksmaxxing`
 - **Subtitle** (30 char max): `Face Scan & Glow Score`
 - **Bundle ID**: `com.petersdev.loxmax.pro`
 - **Primary category**: Lifestyle
@@ -11,12 +11,10 @@
 
 ## Privacy Policy URL
 
-Use the published policy — pick ONE, whichever is live when you submit:
-- Artifact (published now, share it first — see note below): the URL from this session
-- Or once you enable GitHub Pages: `https://notnaranjagrande.github.io/loxmaxclaude/privacy.html`
-  (source already committed at `docs/privacy.html`; enable via repo Settings → Pages → Deploy from branch → `main` /docs)
-
-**Important**: the Artifact link is private until you click "Share" on it — Apple's reviewer must be able to open it without logging into Claude. Either share the Artifact publicly, or switch to GitHub Pages before submitting.
+Live via GitHub Pages (repo is public, source at `docs/privacy.html`):
+```
+https://notnaranjagrande.github.io/loxmaxclaude/privacy.html
+```
 
 ## Support URL
 
