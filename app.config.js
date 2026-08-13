@@ -3,7 +3,7 @@ require("dotenv").config();
 module.exports = {
   expo: {
     name: "GlowMax",
-    slug: "glowmax",
+    slug: "petersdev",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
