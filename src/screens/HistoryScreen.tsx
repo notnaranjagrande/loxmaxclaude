@@ -17,12 +17,14 @@ import { fetchScans, deleteScan } from "../lib/scans";
 import { useAuth } from "../lib/AuthContext";
 import { colors, radii } from "../lib/theme";
 import { useTranslation } from "../lib/i18n";
+import { useEntitlement } from "../lib/EntitlementContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "History">;
 
 export function HistoryScreen({ navigation }: Props) {
   const { session } = useAuth();
   const { t, localeTag } = useTranslation();
+  const { isSubscribed } = useEntitlement();
   const [scans, setScans] = useState<ScanResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -82,7 +84,10 @@ export function HistoryScreen({ navigation }: Props) {
         <View style={styles.centerContent}>
           <Text style={styles.emptyEmoji}>📭</Text>
           <Text style={styles.emptyText}>{t("history.empty")}</Text>
-          <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("Scan")}>
+          <Pressable
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate(isSubscribed ? "Scan" : "Paywall")}
+          >
             <Text style={styles.primaryButtonText}>{t("history.startScan")}</Text>
           </Pressable>
         </View>

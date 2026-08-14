@@ -7,6 +7,7 @@ import { ScanScreen } from "../screens/ScanScreen";
 import { AnalyzingScreen } from "../screens/AnalyzingScreen";
 import { ResultsScreen } from "../screens/ResultsScreen";
 import { HistoryScreen } from "../screens/HistoryScreen";
+import { PaywallScreen } from "../screens/PaywallScreen";
 import { colors } from "../lib/theme";
 
 export type RootStackParamList = {
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   Analyzing: { photoUri: string };
   Results: { scan: ScanResult; isNew: boolean };
   History: undefined;
+  Paywall: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -51,6 +53,11 @@ export function RootNavigator() {
         <Stack.Screen name="Analyzing" component={AnalyzingScreen} />
         <Stack.Screen name="Results" component={ResultsScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
+        <Stack.Screen
+          name="Paywall"
+          component={PaywallScreen}
+          options={{ presentation: "modal" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

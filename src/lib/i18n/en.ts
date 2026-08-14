@@ -3,6 +3,20 @@ export interface TranslationShape {
     close: string;
     back: string;
     tryAgain: string;
+    skip: string;
+    continueLabel: string;
+  };
+  onboarding: {
+    perWeek: string;
+    perYear: string;
+    billedYearly: string;
+    startTrial: string;
+    subscribe: string;
+    restorePurchases: string;
+    terms: string;
+    privacy: string;
+    loadingPlans: string;
+    purchaseError: string;
   };
   welcome: {
     title: string;
@@ -81,6 +95,20 @@ export const en: TranslationShape = {
     close: "Close",
     back: "Back",
     tryAgain: "Try again",
+    skip: "Skip",
+    continueLabel: "Continue",
+  },
+  onboarding: {
+    perWeek: "per week",
+    perYear: "billed {price}/year",
+    billedYearly: "Best value",
+    startTrial: "Start free trial",
+    subscribe: "Continue",
+    restorePurchases: "Restore purchases",
+    terms: "Terms",
+    privacy: "Privacy",
+    loadingPlans: "Loading plans…",
+    purchaseError: "Something went wrong. Please try again.",
   },
   welcome: {
     title: "GlowMax",

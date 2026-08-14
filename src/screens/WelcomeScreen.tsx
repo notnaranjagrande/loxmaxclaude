@@ -7,11 +7,17 @@ import type { RootStackParamList } from "../navigation/RootNavigator";
 import { colors, radii } from "../lib/theme";
 import { useTranslation } from "../lib/i18n";
 import { PRIVACY_POLICY_URL } from "../lib/constants";
+import { useEntitlement } from "../lib/EntitlementContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen({ navigation }: Props) {
   const { t } = useTranslation();
+  const { isSubscribed } = useEntitlement();
+
+  function handleStartScan() {
+    navigation.navigate(isSubscribed ? "Scan" : "Paywall");
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,7 +43,7 @@ export function WelcomeScreen({ navigation }: Props) {
       </View>
 
       <View style={styles.actions}>
-        <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("Scan")}>
+        <Pressable style={styles.primaryButton} onPress={handleStartScan}>
           <Text style={styles.primaryButtonText}>{t("welcome.startScan")}</Text>
         </Pressable>
         <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate("History")}>

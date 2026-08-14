@@ -9,6 +9,7 @@ import { useTranslation } from "../lib/i18n";
 import { getTier, getTierColor, getTopPercent } from "../lib/scoreTiers";
 import { CATEGORY_TIP } from "../lib/scoring";
 import { CategoryRing } from "../components/CategoryRing";
+import { useEntitlement } from "../lib/EntitlementContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Results">;
 
@@ -21,6 +22,7 @@ function scoreColor(score: number) {
 export function ResultsScreen({ route, navigation }: Props) {
   const { scan } = route.params;
   const { t } = useTranslation();
+  const { isSubscribed } = useEntitlement();
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
@@ -59,7 +61,10 @@ export function ResultsScreen({ route, navigation }: Props) {
         </View>
 
         <View style={styles.actions}>
-          <Pressable style={styles.primaryButton} onPress={() => navigation.replace("Scan")}>
+          <Pressable
+            style={styles.primaryButton}
+            onPress={() => navigation.replace(isSubscribed ? "Scan" : "Paywall")}
+          >
             <Text style={styles.primaryButtonText}>{t("results.scanAgain")}</Text>
           </Pressable>
           <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate("History")}>
