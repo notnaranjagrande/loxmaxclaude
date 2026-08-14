@@ -12,6 +12,7 @@ import { SingleSelectStep } from "./onboarding/SingleSelectStep";
 import { SliderStep } from "./onboarding/SliderStep";
 import { InfoStep } from "./onboarding/InfoStep";
 import { AnalyzingStep } from "./onboarding/AnalyzingStep";
+import { ComparisonStep } from "./onboarding/ComparisonStep";
 import { PaywallStep } from "./onboarding/PaywallStep";
 
 export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
@@ -82,6 +83,8 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
         )}
 
         {step.type === "info" && <InfoStep config={step} />}
+
+        {step.type === "comparison" && <ComparisonStep config={step} />}
 
         {step.type === "analyzing" && <AnalyzingStep config={step} onDone={goNext} />}
 

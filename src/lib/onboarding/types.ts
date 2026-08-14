@@ -44,6 +44,18 @@ export type AnalyzingStepConfig = {
   items: string[];
 };
 
+export type ComparisonStepConfig = {
+  type: "comparison";
+  key: string;
+  title: string;
+  leftTitle: string;
+  leftItems: string[];
+  leftImage?: number; // require()'d asset, optional
+  rightTitle: string;
+  rightItems: string[];
+  rightImage?: number; // require()'d asset, optional
+};
+
 export type PaywallStepConfig = {
   type: "paywall";
   key: string;
@@ -59,6 +71,7 @@ export type OnboardingStepConfig =
   | SliderStepConfig
   | InfoStepConfig
   | AnalyzingStepConfig
+  | ComparisonStepConfig
   | PaywallStepConfig;
 
 export type OnboardingAnswers = Record<string, string | string[] | number>;

@@ -74,6 +74,23 @@ const en: OnboardingStepConfig[] = [
       "With honest, private tools — not filters, not comparisons to other people. Just a clear read on your own face, and constructive tips to work with.",
   },
   {
+    type: "comparison",
+    key: "comparison",
+    title: "Without vs. with GlowMax",
+    leftTitle: "WITHOUT GLOWMAX",
+    leftItems: [
+      "Guessing what to work on",
+      "No way to track changes over time",
+      "Generic advice that isn't about your face",
+    ],
+    rightTitle: "WITH GLOWMAX",
+    rightItems: [
+      "Clear, personalized feedback",
+      "Progress tracked scan over scan",
+      "Tips based on your actual measurements",
+    ],
+  },
+  {
     type: "analyzing",
     key: "settingUp",
     items: [
@@ -167,6 +184,23 @@ const sv: OnboardingStepConfig[] = [
     title: "Hjälpa dig känna dig bra i ditt utseende",
     subtitle:
       "Med ärliga, privata verktyg — inga filter, inga jämförelser med andra. Bara en tydlig bild av ditt eget ansikte, och konstruktiva tips att jobba med.",
+  },
+  {
+    type: "comparison",
+    key: "comparison",
+    title: "Utan vs. med GlowMax",
+    leftTitle: "UTAN GLOWMAX",
+    leftItems: [
+      "Gissar vad du bör jobba på",
+      "Inget sätt att följa förändring över tid",
+      "Generiska råd som inte handlar om ditt ansikte",
+    ],
+    rightTitle: "MED GLOWMAX",
+    rightItems: [
+      "Tydlig, personlig feedback",
+      "Framsteg spårade scan för scan",
+      "Tips baserade på dina faktiska mått",
+    ],
   },
   {
     type: "analyzing",
