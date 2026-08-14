@@ -12,7 +12,7 @@ module.exports = {
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.petersdev.loxmax.pro",
-      buildNumber: "1",
+      buildNumber: "6",
       infoPlist: {
         NSCameraUsageDescription:
           "GlowMax uses your camera to scan your face and give you personalized tips. Photos are analyzed on your device.",
