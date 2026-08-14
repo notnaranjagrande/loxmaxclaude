@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../navigation/RootNavigator";
+import type { CategoryScore } from "../types/scan";
 import { colors, radii } from "../lib/theme";
 import { useTranslation } from "../lib/i18n";
+import { getTier, getTierColor, getTopPercent } from "../lib/scoreTiers";
+import { CATEGORY_TIP } from "../lib/scoring";
+import { CategoryRing } from "../components/CategoryRing";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Results">;
 
@@ -38,30 +42,20 @@ export function ResultsScreen({ route, navigation }: Props) {
           </View>
         </View>
 
-        <View style={styles.categories}>
+        <View style={styles.grid}>
           {scan.categories.map((c) => (
-            <View key={c.category} style={styles.categoryRow}>
-              <Text style={styles.categoryLabel}>{t(`categories.${c.category}`)}</Text>
-              <View style={styles.barTrack}>
-                <View
-                  style={[
-                    styles.barFill,
-                    { width: `${c.score}%`, backgroundColor: scoreColor(c.score) },
-                  ]}
-                />
-              </View>
-              <Text style={styles.categoryScore}>{c.score}</Text>
-            </View>
+            <CategoryCard key={c.category} category={c} />
           ))}
         </View>
 
         <View style={styles.tipsSection}>
-          <Text style={styles.tipsTitle}>{t("results.tipsTitle")}</Text>
-          {scan.tips.map((tip, i) => (
-            <View key={i} style={styles.tipCard}>
-              <Text style={styles.tipText}>{t(`tips.${tip}`)}</Text>
-            </View>
-          ))}
+          <Text style={styles.tipsTitle}>{t("results.generalTipsTitle")}</Text>
+          <View style={styles.tipCard}>
+            <Text style={styles.tipText}>{t("tips.lightingTip")}</Text>
+          </View>
+          <View style={styles.tipCard}>
+            <Text style={styles.tipText}>{t("tips.sleepWaterTip")}</Text>
+          </View>
         </View>
 
         <View style={styles.actions}>
@@ -74,6 +68,41 @@ export function ResultsScreen({ route, navigation }: Props) {
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function CategoryCard({ category: c }: { category: CategoryScore }) {
+  const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+  const tier = getTier(c.score);
+  const tierColor = getTierColor(tier);
+  const topPercent = getTopPercent(c.score);
+  const tipKey = CATEGORY_TIP[c.category];
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.cardLabel}>{t(`categories.${c.category}`)}</Text>
+      <View style={[styles.tierPill, { backgroundColor: tierColor + "26", borderColor: tierColor }]}>
+        <Text style={[styles.tierPillText, { color: tierColor }]}>{t(`tiers.${tier}`)}</Text>
+      </View>
+      <View style={styles.ringWrap}>
+        <CategoryRing score={c.score} color={tierColor} />
+      </View>
+      <Text style={styles.topPercentText}>
+        {t("results.topPercent", { n: topPercent })}
+      </Text>
+      <Pressable
+        style={styles.adviceRow}
+        onPress={() => setExpanded((e) => !e)}
+        hitSlop={8}
+      >
+        <Text style={styles.adviceRowText}>
+          {expanded ? t("results.hideAdvice") : t("results.showAdvice")}
+        </Text>
+        <Text style={styles.adviceChevron}>{expanded ? "︿" : "﹀"}</Text>
+      </Pressable>
+      {expanded && <Text style={styles.adviceText}>{t(`tips.${tipKey}`)}</Text>}
+    </View>
   );
 }
 
@@ -115,27 +144,50 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   scoreBadgeText: { fontSize: 22, fontWeight: "800" },
-  categories: {
+  grid: {
     marginTop: 36,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  card: {
+    width: "48%",
     backgroundColor: colors.card,
     borderRadius: radii.md,
-    padding: 18,
-    gap: 14,
     borderWidth: 1,
     borderColor: colors.border,
+    padding: 14,
+    alignItems: "center",
+    marginBottom: 12,
   },
-  categoryRow: { flexDirection: "row", alignItems: "center", gap: 10 },
-  categoryLabel: { color: colors.text, width: 96, fontSize: 13, fontWeight: "600" },
-  barTrack: {
-    flex: 1,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.bgAlt,
-    overflow: "hidden",
+  cardLabel: { color: colors.text, fontSize: 14, fontWeight: "700", marginBottom: 8 },
+  tierPill: {
+    borderWidth: 1,
+    borderRadius: radii.pill,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    marginBottom: 10,
   },
-  barFill: { height: 8, borderRadius: 4 },
-  categoryScore: { color: colors.textMuted, width: 28, textAlign: "right", fontSize: 13 },
-  tipsSection: { marginTop: 24 },
+  tierPillText: { fontSize: 11, fontWeight: "700" },
+  ringWrap: { marginBottom: 8 },
+  topPercentText: { color: colors.textMuted, fontSize: 11, marginBottom: 10 },
+  adviceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 4,
+  },
+  adviceRowText: { color: colors.primary, fontSize: 12, fontWeight: "600" },
+  adviceChevron: { color: colors.primary, fontSize: 12 },
+  adviceText: {
+    color: colors.textMuted,
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  tipsSection: { marginTop: 8 },
   tipsTitle: { color: colors.text, fontSize: 18, fontWeight: "700", marginBottom: 12 },
   tipCard: {
     backgroundColor: colors.card,

@@ -1,6 +1,12 @@
 export type Landmark = { x: number; y: number; z?: number };
 
-export type ScoreCategory = "symmetry" | "proportions" | "skin" | "jawline";
+export type ScoreCategory =
+  | "symmetry"
+  | "proportions"
+  | "skin"
+  | "jawline"
+  | "eyes"
+  | "cheekbones";
 
 export type CategoryScore = {
   category: ScoreCategory;
@@ -13,6 +19,7 @@ export type TipKey =
   | "skincareRoutine"
   | "eyebrowsBalance"
   | "thirdsProportions"
+  | "cheekboneContour"
   | "lightingTip"
   | "sleepWaterTip";
 

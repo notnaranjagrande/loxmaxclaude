@@ -10,6 +10,7 @@ export const colors = {
   border: "#332957",
   success: "#7CE0B8",
   warning: "#FFC97C",
+  low: "#FF9B8F",
 };
 
 export const gradients = {

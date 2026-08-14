@@ -1,4 +1,15 @@
-import type { CategoryScore, Landmark, TipKey } from "../types/scan";
+import type { CategoryScore, Landmark, ScoreCategory, TipKey } from "../types/scan";
+
+// Deterministic per-category advice, independent of which tips made the
+// (capped) `tips` array on any given scan — always available in the UI.
+export const CATEGORY_TIP: Record<ScoreCategory, TipKey> = {
+  symmetry: "symmetryHairstyle",
+  jawline: "jawlineGrooming",
+  cheekbones: "cheekboneContour",
+  eyes: "eyebrowsBalance",
+  proportions: "thirdsProportions",
+  skin: "skincareRoutine",
+};
 
 // MediaPipe FaceMesh (478 pt) landmark indices used for measurements.
 const IDX = {
@@ -37,6 +48,13 @@ function ratioScore(actual: number, ideal: number, tolerance: number) {
   return clamp(100 - (deviation / tolerance) * 30);
 }
 
+// Same idea, but for values where an "ideal / tolerance" absolute
+// comparison makes more sense than a ratio (e.g. small tilt angles).
+function linearScore(actual: number, ideal: number, toleranceAbs: number) {
+  const deviation = Math.abs(actual - ideal);
+  return clamp(100 - (deviation / toleranceAbs) * 30);
+}
+
 export type SkinMetrics = {
   evenness: number; // 0-100, higher = more even tone, from WebView pixel sampling
   brightness: number; // 0-100
@@ -70,13 +88,8 @@ export function computeScan(
   symmetryDeviation /= mirrorPairs.length;
   const symmetryScore = clamp(100 - symmetryDeviation * 600);
 
-  // --- Proportions: classic facial-harmony ratios ---
+  // --- Proportions: classic facial-harmony ratios (face shape + thirds) ---
   const lengthWidthRatio = faceHeight / faceWidth;
-  const eyeWidthLeft = dist(p(IDX.eyeOuterLeft), p(IDX.eyeInnerLeft));
-  const eyeWidthRight = dist(p(IDX.eyeOuterRight), p(IDX.eyeInnerRight));
-  const avgEyeWidth = (eyeWidthLeft + eyeWidthRight) / 2;
-  const interocular = dist(p(IDX.eyeInnerLeft), p(IDX.eyeInnerRight));
-  const eyeSpacingRatio = interocular / avgEyeWidth;
   const noseWidth = dist(p(IDX.nostrilLeft), p(IDX.nostrilRight));
   const mouthWidth = dist(p(IDX.mouthLeft), p(IDX.mouthRight));
   const noseMouthRatio = noseWidth / mouthWidth;
@@ -91,24 +104,45 @@ export function computeScan(
 
   const proportionsScore = clamp(
     (ratioScore(lengthWidthRatio, 1.5, 0.18) +
-      ratioScore(eyeSpacingRatio, 1.0, 0.22) +
       ratioScore(noseMouthRatio, 0.75, 0.22) +
       clamp(100 - thirdsVariance * 220)) /
-      4
+      3
   );
 
-  // --- Jawline: definition proxy from jaw width vs face width + angularity ---
+  // --- Jawline: definition proxy from jaw width vs face width ---
   const jawWidth = dist(p(IDX.jawLeft), p(IDX.jawRight));
   const jawFaceRatio = jawWidth / faceWidth;
   const jawlineScore = clamp(ratioScore(jawFaceRatio, 0.78, 0.2));
+
+  // --- Eyes: spacing (one-eye-width apart) + canthal tilt ---
+  const eyeWidthLeft = dist(p(IDX.eyeOuterLeft), p(IDX.eyeInnerLeft));
+  const eyeWidthRight = dist(p(IDX.eyeOuterRight), p(IDX.eyeInnerRight));
+  const avgEyeWidth = (eyeWidthLeft + eyeWidthRight) / 2;
+  const interocular = dist(p(IDX.eyeInnerLeft), p(IDX.eyeInnerRight));
+  const eyeSpacingRatio = interocular / avgEyeWidth;
+  const eyeSpacingScore = ratioScore(eyeSpacingRatio, 1.0, 0.22);
+
+  // Positive tilt = outer corner higher than inner corner (smaller y = higher on screen).
+  const tiltLeft = (p(IDX.eyeInnerLeft).y - p(IDX.eyeOuterLeft).y) / eyeWidthLeft;
+  const tiltRight = (p(IDX.eyeInnerRight).y - p(IDX.eyeOuterRight).y) / eyeWidthRight;
+  const avgTilt = (tiltLeft + tiltRight) / 2;
+  const tiltScore = linearScore(avgTilt, 0.1, 0.12);
+
+  const eyesScore = clamp((eyeSpacingScore + tiltScore) / 2);
+
+  // --- Cheekbones: cheekbone width vs jaw width (V-taper proxy) ---
+  const cheekJawRatio = faceWidth / jawWidth;
+  const cheekbonesScore = clamp(ratioScore(cheekJawRatio, 1.15, 0.18));
 
   // --- Skin: from WebView pixel sampling, or a neutral fallback ---
   const skinScore = skin ? clamp((skin.evenness + skin.brightness) / 2) : 68;
 
   const categories: CategoryScore[] = [
     { category: "symmetry", score: Math.round(symmetryScore) },
-    { category: "proportions", score: Math.round(proportionsScore) },
     { category: "jawline", score: Math.round(jawlineScore) },
+    { category: "cheekbones", score: Math.round(cheekbonesScore) },
+    { category: "eyes", score: Math.round(eyesScore) },
+    { category: "proportions", score: Math.round(proportionsScore) },
     { category: "skin", score: Math.round(skinScore) },
   ];
 
@@ -121,8 +155,8 @@ export function computeScan(
     proportionsScore,
     jawlineScore,
     skinScore,
-    eyeSpacingRatio,
-    noseMouthRatio,
+    eyesScore,
+    cheekbonesScore,
     thirdsVariance,
   });
 
@@ -134,8 +168,8 @@ function buildTips(m: {
   proportionsScore: number;
   jawlineScore: number;
   skinScore: number;
-  eyeSpacingRatio: number;
-  noseMouthRatio: number;
+  eyesScore: number;
+  cheekbonesScore: number;
   thirdsVariance: number;
 }): TipKey[] {
   const tips: TipKey[] = [];
@@ -143,10 +177,11 @@ function buildTips(m: {
   if (m.symmetryScore < 75) tips.push("symmetryHairstyle");
   if (m.jawlineScore < 70) tips.push("jawlineGrooming");
   if (m.skinScore < 70) tips.push("skincareRoutine");
-  if (m.eyeSpacingRatio < 0.85 || m.eyeSpacingRatio > 1.15) tips.push("eyebrowsBalance");
+  if (m.eyesScore < 70) tips.push("eyebrowsBalance");
+  if (m.cheekbonesScore < 70) tips.push("cheekboneContour");
   if (m.thirdsVariance > 0.15) tips.push("thirdsProportions");
   tips.push("lightingTip");
   tips.push("sleepWaterTip");
 
-  return tips.slice(0, 5);
+  return tips.slice(0, 6);
 }

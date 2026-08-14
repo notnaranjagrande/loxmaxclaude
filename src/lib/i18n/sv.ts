@@ -48,6 +48,15 @@ export const sv: TranslationShape = {
     tipsTitle: "Dina tips ✨",
     scanAgain: "Scanna igen",
     viewHistory: "Se historik",
+    topPercent: "Topp {n}%",
+    showAdvice: "Visa råd",
+    hideAdvice: "Dölj råd",
+    generalTipsTitle: "Ett par till tips",
+  },
+  tiers: {
+    high: "Hög",
+    normal: "Normal",
+    low: "Låg",
   },
   history: {
     title: "Historik",
@@ -61,6 +70,8 @@ export const sv: TranslationShape = {
     proportions: "Proportioner",
     jawline: "Käklinje",
     skin: "Hudton",
+    eyes: "Ögon",
+    cheekbones: "Kindben",
   },
   tips: {
     symmetryHairstyle:
@@ -70,9 +81,11 @@ export const sv: TranslationShape = {
     skincareRoutine:
       "En enkel hudvårdsrutin (rengöring, fuktkräm, SPF dagligen) gör stor skillnad för hudens jämnhet och lyster inom några veckor.",
     eyebrowsBalance:
-      "Ögonbrynens form kan justeras (trimning/tejp) för att skapa mer visuell balans mellan ögonen.",
+      "Ögonbrynens form och lätt mascara/eyeliner kan förstärka din ögonform och förbättra den visuella balansen mellan ögonen.",
     thirdsProportions:
       "Frisyr och skägg kan användas för att visuellt jämna ut proportionerna mellan panna, näsa och haka.",
+    cheekboneContour:
+      "Subtil konturering, en frisyr med volym vid sidorna eller ansiktsövningar kan hjälpa till att framhäva kindbenen visuellt.",
     lightingTip: "Bra belysning framifrån och en avslappnad hållning gör mest skillnad på foton.",
     sleepWaterTip: "Sömn, vatten och regelbunden träning märks snabbt i hudton och ansiktskontur.",
   },
